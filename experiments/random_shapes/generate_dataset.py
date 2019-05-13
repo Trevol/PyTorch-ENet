@@ -13,6 +13,7 @@ def main():
     for className, ((y1, y2), (x1, x2)) in annotations:
         cv2.rectangle(img, (x1, y1), (x2, y2), (0, 0, 0))
     imshow(img)
+
     cv2.waitKeyEx()
 
 
