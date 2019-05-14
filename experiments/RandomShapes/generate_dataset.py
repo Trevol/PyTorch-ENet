@@ -44,9 +44,9 @@ class Generator:
 def main():
     generator = Generator([768, 1024])
 
-    generator.generateDatasetItem(1000, 'dataset', 'train', 'trainannot')
-    generator.generateDatasetItem(200, 'dataset', 'val', 'valannot')
-    generator.generateDatasetItem(300, 'dataset', 'test', 'testannot')
+    generator.generateDatasetItem(1000, 'RndShapes', 'train', 'trainannot')
+    generator.generateDatasetItem(200, 'RndShapes', 'val', 'valannot')
+    generator.generateDatasetItem(300, 'RndShapes', 'test', 'testannot')
 
     # Utils_.imshow(img, 'img')
     # Utils_.imshow(labelImg, 'label')
