@@ -17,6 +17,7 @@ from metric.iou import IoU
 from args import get_arguments
 from data.utils import enet_weighing, median_freq_balancing
 import utils
+import numpy as np
 
 
 class Args:
@@ -27,14 +28,15 @@ class Args:
     save_dir = './save/'
     height = 768
     width = 1024
-    batch_size = 6
+    batch_size = 7
     workers = 4
     mode = 'test'
     imshow_batch = False
-    weighing = 'ENet'
+    weighing = './RndShapes/class_weights_ENet.npy'  # 'ENet_' 'mfb' './RndShapes/class_weights_mfb.npy' './RndShapes/class_weights_ENet.npy'
+
     ignore_unlabeled = True
     print_step = False
-    name = 'ENet'
+    name = 'ENet_'
 
     learning_rate = 0.0005
     lr_decay = 0.1
@@ -49,7 +51,7 @@ def train(args: Args, device, train_loader, val_loader, class_weights, class_enc
 
     num_classes = len(class_encoding)
 
-    # Intialize ENet
+    # Intialize ENet_
     model = ENet(num_classes).to(device)
     # Check if the network architecture is correct
     print(model)
@@ -59,7 +61,7 @@ def train(args: Args, device, train_loader, val_loader, class_weights, class_enc
     # fits the problem. This criterion  combines LogSoftMax and NLLLoss.
     criterion = nn.CrossEntropyLoss(weight=class_weights)
 
-    # ENet authors used Adam as the optimizer
+    # ENet_ authors used Adam as the optimizer
     optimizer = optim.Adam(
         model.parameters(),
         lr=args.learning_rate,
@@ -218,6 +220,8 @@ def load_dataset(args, dataset, device):
         class_weights = enet_weighing(train_loader, num_classes)
     elif args.weighing.lower() == 'mfb':
         class_weights = median_freq_balancing(train_loader, num_classes)
+    elif args.weighing is not None:
+        class_weights = np.load(args.weighing)
     else:
         class_weights = None
 
@@ -235,7 +239,6 @@ def load_dataset(args, dataset, device):
 
 
 def main():
-    import torch
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     args = Args()
     loaders, w_class, class_encoding = load_dataset(args, args.dataset_ctor, device)

@@ -74,7 +74,7 @@ class InitialBlock(nn.Module):
 
 
 class RegularBottleneck(nn.Module):
-    """Regular bottlenecks are the main building block of ENet.
+    """Regular bottlenecks are the main building block of ENet_.
     Main branch:
     1. Shortcut connection.
 
@@ -483,7 +483,7 @@ class UpsamplingBottleneck(nn.Module):
 
 
 class ENet(nn.Module):
-    """Generate the ENet model.
+    """Generate the ENet_ model.
 
     Keyword arguments:
     - num_classes (int): the number of classes to segment.

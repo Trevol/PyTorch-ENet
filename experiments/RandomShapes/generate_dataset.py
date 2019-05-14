@@ -38,8 +38,44 @@ class Generator:
         for i, (img, labels) in enumerate(self.generateN(n)):
             file = f'{i + 1}.png'
             cv2.imwrite(os.path.join(imageDir, file), Utils_.rgb2bgr(img))
-            cv2.imwrite(os.path.join(labelsDir, file), img)
+            cv2.imwrite(os.path.join(labelsDir, file), labels)
 
+
+def generateClassWeights(dataset_dir, height, width, batch_size, workers=4):
+    from experiments.RandomShapes.RndShapesDataset import RndShapesDataset as dataset
+    import torchvision.transforms as transforms
+    import transforms as ext_transforms
+    from PIL import Image
+    import torch.utils.data as data
+    from data.utils import enet_weighing, median_freq_balancing
+
+    image_transform = transforms.Compose(
+        [transforms.Resize((height, width)),
+         transforms.ToTensor()])
+
+    label_transform = transforms.Compose([
+        transforms.Resize((height, width), Image.NEAREST),
+        ext_transforms.PILToLongTensor()
+    ])
+    train_set = dataset(
+        dataset_dir,
+        transform=image_transform,
+        label_transform=label_transform)
+    train_loader = data.DataLoader(
+        train_set,
+        batch_size=batch_size,
+        shuffle=True,
+        num_workers=workers)
+
+    class_encoding = train_set.color_encoding
+    # Get number of classes to predict
+    num_classes = len(class_encoding)
+
+    class_weights = enet_weighing(train_loader, num_classes)
+    np.save(os.path.join(dataset_dir, 'class_weights_ENet'), class_weights)
+
+    class_weights = median_freq_balancing(train_loader, num_classes)
+    np.save(os.path.join(dataset_dir, 'class_weights_mfb'), class_weights)
 
 def main():
     generator = Generator([768, 1024])
@@ -48,9 +84,9 @@ def main():
     generator.generateDatasetItem(200, 'RndShapes', 'val', 'valannot')
     generator.generateDatasetItem(300, 'RndShapes', 'test', 'testannot')
 
-    # Utils_.imshow(img, 'img')
-    # Utils_.imshow(labelImg, 'label')
-    # cv2.waitKeyEx()
+    h, w = generator.imSize
+    generateClassWeights('./RndShapes', h, w, 6)
+
 
 
 if __name__ == '__main__':

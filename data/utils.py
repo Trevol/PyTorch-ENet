@@ -90,7 +90,7 @@ def remap(image, old_values, new_values):
 
 
 def enet_weighing(dataloader, num_classes, c=1.02):
-    """Computes class weights as described in the ENet paper:
+    """Computes class weights as described in the ENet_ paper:
 
         w_class = 1 / (ln(c + p_class)),
 
