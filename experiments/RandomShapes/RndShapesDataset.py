@@ -38,10 +38,10 @@ class RndShapesDataset(data.Dataset):
 
     # Default encoding for pixel value, class name, and class color
     color_encoding = OrderedDict([
-        ('circle', (128, 128, 128)),
-        ('rectangle', (128, 0, 0)),
-        ('triangle', (192, 192, 128)),
-        ('unlabeled', (0, 0, 0))
+        ('circle', (255, 0, 0)),
+        ('rectangle', (0, 255, 0)),
+        ('triangle', (0, 0, 255)),
+        ('unlabeled', (255, 255, 255))
     ])
 
     def __init__(self,

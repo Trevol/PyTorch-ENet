@@ -32,10 +32,10 @@ class CityscapesArgs:
     workers = 4
     mode = 'test'
     imshow_batch = False
-    weighing = 'ENet_'
+    weighing = 'ENet'
     ignore_unlabeled = True
     print_step = False
-    name = 'ENet_'
+    name = 'ENet'
 
 
 class CamVidArgs:
@@ -50,10 +50,10 @@ class CamVidArgs:
     workers = 4
     mode = 'test'
     imshow_batch = True
-    weighing = 'ENet_'
+    weighing = 'ENet'
     ignore_unlabeled = True
     print_step = False
-    name = 'ENet_'
+    name = 'ENet'
 
 
 args = CamVidArgs

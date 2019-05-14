@@ -141,7 +141,7 @@ def train(train_loader, val_loader, class_weights, class_encoding):
 
     num_classes = len(class_encoding)
 
-    # Intialize ENet_
+    # Intialize ENet
     model = ENet(num_classes).to(device)
     # Check if the network architecture is correct
     print(model)
@@ -151,7 +151,7 @@ def train(train_loader, val_loader, class_weights, class_encoding):
     # fits the problem. This criterion  combines LogSoftMax and NLLLoss.
     criterion = nn.CrossEntropyLoss(weight=class_weights)
 
-    # ENet_ authors used Adam as the optimizer
+    # ENet authors used Adam as the optimizer
     optimizer = optim.Adam(
         model.parameters(),
         lr=args.learning_rate,
@@ -303,7 +303,7 @@ if __name__ == '__main__':
         if args.mode.lower() == 'full':
             test(model, test_loader, w_class, class_encoding)
     elif args.mode.lower() == 'test':
-        # Intialize a new ENet_ model
+        # Intialize a new ENet model
         num_classes = len(class_encoding)
         model = ENet(num_classes).to(device)
 
@@ -311,7 +311,7 @@ if __name__ == '__main__':
         # checkpoint
         optimizer = optim.Adam(model.parameters())
 
-        # Load the previoulsy saved model state to the ENet_ model
+        # Load the previoulsy saved model state to the ENet model
         model = utils.load_checkpoint(model, optimizer, args.save_dir,
                                       args.name)[0]
         print(model)

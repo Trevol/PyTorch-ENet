@@ -83,7 +83,7 @@ def get_arguments():
     parser.add_argument(
         "--weighing",
         choices=['enet', 'mfb', 'none'],
-        default='ENet_',
+        default='ENet',
         help="The class weighing technique to apply to the dataset. "
         "Default: enet")
     parser.add_argument(
@@ -116,8 +116,8 @@ def get_arguments():
     parser.add_argument(
         "--name",
         type=str,
-        default='ENet_',
-        help="Name given to the model when saving. Default: ENet_")
+        default='ENet',
+        help="Name given to the model when saving. Default: ENet")
     parser.add_argument(
         "--save-dir",
         type=str,

@@ -32,11 +32,11 @@ class Args:
     workers = 4
     mode = 'test'
     imshow_batch = False
-    weighing = './RndShapes/class_weights_ENet.npy'  # 'ENet_' 'mfb' './RndShapes/class_weights_mfb.npy' './RndShapes/class_weights_ENet.npy'
+    weighing = './RndShapes/class_weights_ENet.npy'  # 'ENet' 'mfb' './RndShapes/class_weights_mfb.npy' './RndShapes/class_weights_ENet.npy'
 
     ignore_unlabeled = True
     print_step = False
-    name = 'ENet_'
+    name = 'ENet'
 
     learning_rate = 0.0005
     lr_decay = 0.1
@@ -51,7 +51,7 @@ def train(args: Args, device, train_loader, val_loader, class_weights, class_enc
 
     num_classes = len(class_encoding)
 
-    # Intialize ENet_
+    # Intialize ENet
     model = ENet(num_classes).to(device)
     # Check if the network architecture is correct
     print(model)
@@ -61,7 +61,7 @@ def train(args: Args, device, train_loader, val_loader, class_weights, class_enc
     # fits the problem. This criterion  combines LogSoftMax and NLLLoss.
     criterion = nn.CrossEntropyLoss(weight=class_weights)
 
-    # ENet_ authors used Adam as the optimizer
+    # ENet authors used Adam as the optimizer
     optimizer = optim.Adam(
         model.parameters(),
         lr=args.learning_rate,
