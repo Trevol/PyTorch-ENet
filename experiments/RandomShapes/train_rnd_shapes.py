@@ -25,7 +25,7 @@ class Args:
     dataset_ctor = ds
     dataset = 'RndShapes'
     dataset_dir = './RndShapes/'
-    save_dir = './save/'
+    save_dir = './checkpoints/'
     height = 768
     width = 1024
     batch_size = 7
