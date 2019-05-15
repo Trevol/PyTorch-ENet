@@ -3,6 +3,14 @@ from collections import OrderedDict
 import torch.utils.data as data
 from data import utils
 
+# Default encoding for pixel value, class name, and class color
+color_encoding = OrderedDict([
+    ('unlabeled', (255, 255, 255)),  # white
+    ('circle', (255, 0, 0)),  # red
+    ('rectangle', (0, 255, 0)),  # green
+    ('triangle', (0, 0, 255))  # blue
+])
+
 
 class RndShapesDataset(data.Dataset):
     """CamVid dataset loader where the dataset is arranged as in
@@ -36,13 +44,7 @@ class RndShapesDataset(data.Dataset):
     # Images extension
     img_extension = '.png'
 
-    # Default encoding for pixel value, class name, and class color
-    color_encoding = OrderedDict([
-        ('circle', (255, 0, 0)),
-        ('rectangle', (0, 255, 0)),
-        ('triangle', (0, 0, 255)),
-        ('unlabeled', (255, 255, 255))
-    ])
+    color_encoding = color_encoding
 
     def __init__(self,
                  root_dir,

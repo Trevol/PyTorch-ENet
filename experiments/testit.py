@@ -1,20 +1,14 @@
 import os
 import torch
-import torch.optim as optim
-import torch.nn as nn
 
 import torchvision.transforms as transforms
 from PIL import Image
 import transforms as ext_transforms
 import torch.utils.data as data
 import utils
-from data.utils import enet_weighing, median_freq_balancing
+from experiments.LongTensorToCHWRGBTensor import LongTensorToCHWRGBTensor
 from models.enet import ENet
-from metric.iou import IoU
-from test import Test
-from collections import OrderedDict
 import torchvision
-import numpy as np
 import matplotlib.pyplot as plt
 
 device = torch.device('cuda')
@@ -112,46 +106,6 @@ def predict(model, images, class_encoding):
     ])
     color_predictions = utils.batch_transform(predictions.cpu(), label_to_rgb)
     return color_predictions
-
-
-class LongTensorToCHWRGBTensor(object):
-
-    def __init__(self, rgb_encoding):
-        self.rgb_encoding = rgb_encoding
-
-    def __call__(self, tensor):
-        """Performs the conversion from ``torch.LongTensor`` to a ``RGB tensor``
-
-        Keyword arguments:
-        - tensor (``torch.LongTensor``): the tensor to convert
-
-        Returns:
-        A ``RGB tensor of shape (C, H, W)``.
-
-        """
-        # Check if label_tensor is a LongTensor
-        if not isinstance(tensor, torch.LongTensor):
-            raise TypeError("label_tensor should be torch.LongTensor. Got {}"
-                            .format(type(tensor)))
-        # Check if encoding is a ordered dictionary
-        if not isinstance(self.rgb_encoding, OrderedDict):
-            raise TypeError("encoding should be an OrderedDict. Got {}".format(
-                type(self.rgb_encoding)))
-
-        # label_tensor might be an image without a channel dimension, in this
-        # case unsqueeze it
-        if len(tensor.size()) == 2:
-            tensor.unsqueeze_(0)
-        # (C, H, W) tensor
-        color_tensor = torch.ByteTensor(3, tensor.size(1), tensor.size(2))
-
-        for index, (class_name, color) in enumerate(self.rgb_encoding.items()):
-            # Get a mask of elements equal to index
-            mask = torch.eq(tensor, index).squeeze_()
-            # Fill color_tensor with corresponding colors
-            for channel, color_value in enumerate(color):
-                color_tensor[channel].masked_fill_(mask, color_value)
-        return color_tensor
 
 
 def imshow_batch(images, labels):
