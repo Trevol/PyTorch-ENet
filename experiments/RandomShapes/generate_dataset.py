@@ -1,5 +1,6 @@
 # from skimage.draw import random_shapes
 from experiments.RandomShapes.random_shapes import random_shapes
+from experiments.RandomShapes.RndShapesDataset import RndShapesDataset
 import cv2
 import numpy as np
 import os
@@ -42,7 +43,7 @@ class Generator:
 
 
 def generateClassWeights(dataset_dir, height, width, batch_size, workers=4):
-    from experiments.RandomShapes.RndShapesDataset import RndShapesDataset as dataset
+
     import torchvision.transforms as transforms
     import transforms as ext_transforms
     from PIL import Image
@@ -57,7 +58,7 @@ def generateClassWeights(dataset_dir, height, width, batch_size, workers=4):
         transforms.Resize((height, width), Image.NEAREST),
         ext_transforms.PILToLongTensor()
     ])
-    train_set = dataset(
+    train_set = RndShapesDataset(
         dataset_dir,
         transform=image_transform,
         label_transform=label_transform)
