@@ -8,7 +8,7 @@ from experiments.RandomShapes.RndShapesDataset import color_encoding
 from experiments.LongTensorToCHWRGBTensor import LongTensorToCHWRGBTensor
 import torchvision.transforms as transforms
 from experiments.imshow import imshow
-from experiments.random_shapes import random_shapes
+from experiments.RandomShapes.generate_dataset import Generator
 
 
 def loadImageTensor(item='test'):
@@ -31,13 +31,15 @@ def main():
 
     state = torch.load('./checkpoints/ENet', map_location='cpu')
     model.load_state_dict(state['state_dict'])
-    # load image, resize and convert to mini-batch tensor
 
-    tensor, image, gtLabel = loadImageTensor('train')
-    # inputMiniBatch = tensor.unsqueeze(0)
-    inputMiniBatch = torch.stack([tensor, tensor])
+    imageAsTensor, image, gtTestLabel = loadImageTensor('train')
+    generatedImage, gtGeneratedLabel = Generator([768, 1024]).generate()
 
-    gtLabel = torch.LongTensor(np.array(gtLabel))
+    inputMiniBatch = torch.stack([imageAsTensor, transforms.ToTensor()(generatedImage)])
+    images = [image, generatedImage]
+    gtLabels = [gtTestLabel, gtGeneratedLabel]
+
+    # gtTestLabel = torch.LongTensor(np.array(gtTestLabel))
 
     with torch.no_grad():
         predictions = model(inputMiniBatch)
@@ -46,12 +48,12 @@ def main():
     toRgb = LongTensorToCHWRGBTensor(color_encoding)
 
     imageRows = []
-    for prediction in torch.unbind(predictions):
+    for prediction, image, gtLabel in zip(torch.unbind(predictions), images, gtLabels):
         predictedLabels = toRgb(prediction).cpu().numpy().transpose(1, 2, 0)
-        gtLabelImage = toRgb(gtLabel).cpu().numpy().transpose(1, 2, 0)
+        # gtLabelImage = toRgb(gtTestLabel).cpu().numpy().transpose(1, 2, 0)
 
         imageRows.append(
-            [image, predictedLabels, gtLabelImage]
+            [image, predictedLabels, gtLabel]
         )
 
     imshow(*imageRows)
