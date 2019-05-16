@@ -6,7 +6,7 @@ def to2dList(*arys):
     result = []
     rows, cols = 0, 0
     for ar in arys:
-        if not isinstance(ar, list):  # single item
+        if not isinstance(ar, (list, tuple)):  # single item
             ar = [ar]
         elif len(ar) == 0:
             continue
