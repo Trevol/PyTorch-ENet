@@ -1,5 +1,3 @@
-import os
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -14,14 +12,13 @@ from models.enet import ENet
 from train import Train
 from test import Test
 from metric.iou import IoU
-from args import get_arguments
 from data.utils import enet_weighing, median_freq_balancing
 import utils
 import numpy as np
 
 
 class Args:
-    from experiments.RandomShapes.RndShapesDataset import RndShapesDataset as ds
+    from experiments.RndShapesDataset import RndShapesDataset as ds
     dataset_ctor = ds
     dataset = 'RndShapes'
     dataset_dir = './RndShapes/'

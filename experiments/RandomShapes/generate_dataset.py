@@ -1,5 +1,5 @@
 from experiments.random_shapes import random_shapes
-from experiments.RandomShapes.RndShapesDataset import RndShapesDataset
+from experiments.RndShapesDataset import RndShapesDataset
 import cv2
 import numpy as np
 import os
@@ -22,7 +22,7 @@ class Generator:
         self.imSize = imSize
 
     def generate(self):
-        img, annotations, indices = random_shapes(self.imSize, min_shapes=10, max_shapes=20, min_size=40, max_size=70)
+        img, annotations, indices, colors = random_shapes(self.imSize, min_shapes=10, max_shapes=20, min_size=40, max_size=70)
         labelImg = np.zeros(img.shape[:2], np.uint8)
         # bbox is ((y1, y2), (x1, x2))
         for [className, bbox], ind in zip(annotations, indices):

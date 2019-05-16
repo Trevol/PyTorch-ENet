@@ -1,10 +1,10 @@
 import numpy as np
 from models.enet import ENet
-from experiments.RandomShapes.RndShapesDataset import RndShapesDataset
+from experiments.RndShapesDataset import RndShapesDataset
 import torch
 import os
 from PIL import Image
-from experiments.RandomShapes.RndShapesDataset import color_encoding
+from experiments.RndShapesDataset import color_encoding
 from experiments.LongTensorToCHWRGBTensor import LongTensorToCHWRGBTensor
 import torchvision.transforms as transforms
 from experiments.imshow import imshow

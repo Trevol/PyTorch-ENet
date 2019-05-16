@@ -113,10 +113,12 @@ def random_shapes(image_shape,
     filled = np.zeros(image_shape, dtype=bool)
     labels = []
     allIndices = []
+    usedColors = []
 
     num_shapes = random.randint(min_shapes, max_shapes + 1)
     colors = _generate_random_colors(num_shapes, num_channels,
                                      intensity_range, random)
+
     for shape_idx in range(num_shapes):
         if user_shape is None:
             shape_generator = random.choice(SHAPE_CHOICES)
@@ -136,10 +138,12 @@ def random_shapes(image_shape,
                 continue
             # Check if there is an overlap where the mask is nonzero.
             if allow_overlap or not filled[indices].any():
-                image[indices] = colors[shape_idx]
+                color = colors[shape_idx]
+                image[indices] = color
                 filled[indices] = True
                 labels.append(label)
                 allIndices.append(indices)
+                usedColors.append(color)
                 break
         else:
             warn('Could not fit any shapes to image, '
@@ -147,4 +151,4 @@ def random_shapes(image_shape,
 
     if not multichannel:
         image = np.squeeze(image, axis=2)
-    return image, labels, allIndices
+    return image, labels, allIndices, usedColors
