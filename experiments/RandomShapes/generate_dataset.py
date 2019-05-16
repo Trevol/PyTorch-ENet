@@ -1,5 +1,4 @@
-# from skimage.draw import random_shapes
-from experiments.RandomShapes.random_shapes import random_shapes
+from experiments.random_shapes import random_shapes
 from experiments.RandomShapes.RndShapesDataset import RndShapesDataset
 import cv2
 import numpy as np

@@ -71,7 +71,7 @@ def random_shapes(image_shape,
         A list of labels, one per shape in the image. Each label is a
         (category, ((r0, r1), (c0, c1))) tuple specifying the category and
         bounding box coordinates of the shape.
-
+    allIndices : list
     Examples
     --------
     >>> import skimage.draw

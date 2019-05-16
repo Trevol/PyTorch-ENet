@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from experiments.RandomShapes.RndShapesDataset import color_encoding
 from experiments.LongTensorToCHWRGBTensor import LongTensorToCHWRGBTensor
 import torchvision.transforms as transforms
+from experiments.imshow import imshow
 
 
 def loadImageTensor(item='test'):
@@ -25,19 +26,6 @@ def loadImageTensor(item='test'):
     return tensor, image, gtLabel
 
 
-def main_():
-    tensor, image = loadImageTensor()
-
-    # plt.axis('off')
-    f, (ax1, ax2) = plt.subplots(2, 1)
-    ax1.axis('off')
-    ax2.axis('off')
-
-    ax1.imshow(image)
-    ax2.imshow(image)
-    plt.show()
-
-
 def main():
     classesNum = len(RndShapesDataset.color_encoding)
     model = ENet(classesNum)
@@ -51,27 +39,20 @@ def main():
 
     gtLabel = torch.LongTensor(np.array(gtLabel))
 
-
     with torch.no_grad():
         predictions = model(inputMiniBatch)
 
     _, predictions = torch.max(predictions.data, 1)
     prediction = torch.unbind(predictions)[0]
-
+    # prediction = gtLabel
 
     toRgb = LongTensorToCHWRGBTensor(color_encoding)
     prediction = toRgb(prediction).cpu().numpy().transpose(1, 2, 0)
     gtLabel = toRgb(gtLabel).cpu().numpy().transpose(1, 2, 0)
 
-    f, (ax1, ax2, ax3) = plt.subplots(1, 3)
-    ax1.axis('off')
-    ax2.axis('off')
-    ax3.axis('off')
-
-    ax1.imshow(image)
-    ax2.imshow(prediction)
-    ax3.imshow(gtLabel)
-    plt.show()
+    imshow(
+        [image, prediction, gtLabel]
+    )
 
 
 main()
