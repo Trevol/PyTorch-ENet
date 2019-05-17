@@ -43,6 +43,7 @@ class Args:
     epochs = 300
     resume = False
 
+
 def save_checkpoint(model, optimizer, epoch, miou, args):
     """Saves the model in a specified directory with a specified name.save
 
@@ -82,8 +83,8 @@ def save_checkpoint(model, optimizer, epoch, miou, args):
             summary_file.write(arg_str)
 
         summary_file.write("\nBEST VALIDATION\n")
-        summary_file.write("Epoch: {0}\n". format(epoch))
-        summary_file.write("Mean IoU: {0}\n". format(miou))
+        summary_file.write("Epoch: {0}\n".format(epoch))
+        summary_file.write("Mean IoU: {0}\n".format(miou))
 
 
 def train(args: Args, device, train_loader, val_loader, class_weights, class_encoding):
@@ -156,10 +157,11 @@ def train(args: Args, device, train_loader, val_loader, class_weights, class_enc
 
             # Save the model if it's the best thus far
             if miou > best_miou:
-                print("\nBest model thus far. Saving...\n")
+                print("\nBest model thus far.\n")
                 best_miou = miou
-                utils.save_checkpoint(model, optimizer, epoch + 1, best_miou,
-                                      args)
+
+            print("\nSaving...\n")
+            save_checkpoint(model, optimizer, epoch + 1, best_miou, args)
 
     return model
 
