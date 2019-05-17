@@ -15,6 +15,7 @@ from metric.iou import IoU
 from data.utils import enet_weighing, median_freq_balancing
 import utils
 import numpy as np
+import os
 
 
 class Args:
@@ -41,6 +42,48 @@ class Args:
     weight_decay = 0.0002
     epochs = 300
     resume = False
+
+def save_checkpoint(model, optimizer, epoch, miou, args):
+    """Saves the model in a specified directory with a specified name.save
+
+    Keyword arguments:
+    - model (``nn.Module``): The model to save.
+    - optimizer (``torch.optim``): The optimizer state to save.
+    - epoch (``int``): The current epoch for the model.
+    - miou (``float``): The mean IoU obtained by the model.
+    - args (``ArgumentParser``): An instance of ArgumentParser which contains
+    the arguments used to train ``model``. The arguments are written to a text
+    file in ``args.save_dir`` named "``args.name``_args.txt".
+
+    """
+    name = f'{args.name}_{epoch}'
+    save_dir = args.save_dir
+
+    assert os.path.isdir(
+        save_dir), "The directory \"{0}\" doesn't exist.".format(save_dir)
+
+    # Save model
+    model_path = os.path.join(save_dir, name)
+    checkpoint = {
+        'epoch': epoch,
+        'miou': miou,
+        'state_dict': model.state_dict(),
+        'optimizer': optimizer.state_dict()
+    }
+    torch.save(checkpoint, model_path)
+
+    # Save arguments
+    summary_filename = os.path.join(save_dir, name + '_summary.txt')
+    with open(summary_filename, 'w') as summary_file:
+        sorted_args = sorted(vars(args))
+        summary_file.write("ARGUMENTS\n")
+        for arg in sorted_args:
+            arg_str = "{0}: {1}\n".format(arg, getattr(args, arg))
+            summary_file.write(arg_str)
+
+        summary_file.write("\nBEST VALIDATION\n")
+        summary_file.write("Epoch: {0}\n". format(epoch))
+        summary_file.write("Mean IoU: {0}\n". format(miou))
 
 
 def train(args: Args, device, train_loader, val_loader, class_weights, class_encoding):
