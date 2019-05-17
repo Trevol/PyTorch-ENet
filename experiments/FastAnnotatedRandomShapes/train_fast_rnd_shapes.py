@@ -41,7 +41,7 @@ class Args:
     lr_decay_epochs = 100
     weight_decay = 0.0002
     epochs = 700
-    resume = False
+    resume = True
     resume_checkpoint = 'ENet_300'
 
 
