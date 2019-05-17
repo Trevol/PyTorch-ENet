@@ -40,8 +40,9 @@ class Args:
     lr_decay = 0.1
     lr_decay_epochs = 100
     weight_decay = 0.0002
-    epochs = 300
+    epochs = 700
     resume = False
+    resume_checkpoint = 'ENet_300'
 
 
 def save_checkpoint(model, optimizer, epoch, miou, args):
@@ -122,7 +123,7 @@ def train(args: Args, device, train_loader, val_loader, class_weights, class_enc
     # Optionally resume from a checkpoint
     if args.resume:
         model, optimizer, start_epoch, best_miou = utils.load_checkpoint(
-            model, optimizer, args.save_dir, args.name)
+            model, optimizer, args.save_dir, args.resume_checkpoint)
         print("Resuming from model: Start epoch = {0} "
               "| Best mean IoU = {1:.4f}".format(start_epoch, best_miou))
     else:

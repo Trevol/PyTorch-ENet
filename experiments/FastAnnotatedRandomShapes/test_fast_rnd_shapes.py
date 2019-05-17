@@ -31,18 +31,21 @@ def main():
     classesNum = len(color_encoding)
     model = ENet(classesNum)
 
-    state = torch.load('./checkpoints/ENet', map_location='cpu')
+    state = torch.load('./checkpoints/ENet_250', map_location='cpu')
     model.load_state_dict(state['state_dict'])
 
     imageAsTensor, image, gtTestLabel = loadImageTensor('train')
-    # generatedImage, gtGeneratedLabel = Generator([768, 1024]).generate()
-    generatedImage, gtGeneratedLabel = np.full([768, 1024, 3], 255, np.uint8), np.full([768, 1024, 3], 255, np.uint8)
+    generatedImage, gtGeneratedLabel = Generator([768, 1024]).generate()
+    blankImage = np.full([768, 1024, 3], 255, np.uint8)
+    gtBlankLabel = np.full([768, 1024], 0, np.uint8)
 
-    inputMiniBatch = torch.stack([imageAsTensor, transforms.ToTensor()(generatedImage)])
-    images = [image, generatedImage]
-    gtLabels = [gtTestLabel, gtGeneratedLabel]
-
-    # gtTestLabel = torch.LongTensor(np.array(gtTestLabel))
+    inputMiniBatch = torch.stack([
+        imageAsTensor,
+        transforms.ToTensor()(generatedImage),
+        transforms.ToTensor()(blankImage)
+    ])
+    images = [image, generatedImage, blankImage]
+    gtLabels = [gtTestLabel, gtGeneratedLabel, gtBlankLabel]
 
     with torch.no_grad():
         predictions = model(inputMiniBatch)
@@ -53,7 +56,6 @@ def main():
     imageRows = []
     for prediction, image, gtLabel in zip(torch.unbind(predictions), images, gtLabels):
         predictedLabels = toRgb(prediction).cpu().numpy().transpose(1, 2, 0)
-        # gtLabelImage = toRgb(gtTestLabel).cpu().numpy().transpose(1, 2, 0)
 
         imageRows.append(
             [image, predictedLabels, gtLabel]
