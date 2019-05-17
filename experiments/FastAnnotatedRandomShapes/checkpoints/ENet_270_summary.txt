@@ -1,0 +1,5 @@
+ARGUMENTS
+
+BEST VALIDATION
+Epoch: 270
+Mean IoU: 1.0
