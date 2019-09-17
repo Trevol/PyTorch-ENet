@@ -31,7 +31,7 @@ def main():
     classesNum = len(color_encoding)
     model = ENet(classesNum)
 
-    state = torch.load('./checkpoints/ENet_250', map_location='cpu')
+    state = torch.load('./checkpoints/ENet_650', map_location='cpu')
     model.load_state_dict(state['state_dict'])
 
     imageAsTensor, image, gtTestLabel = loadImageTensor('train')
